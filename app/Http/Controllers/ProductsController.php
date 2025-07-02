@@ -31,6 +31,6 @@ class ProductsController extends Controller
 
         Product::create($request->all());
 
-        return Redirect::route('products.index');
+        return redirect()->route('products.index')->with('message', 'Product created successfully.');
     }
 }

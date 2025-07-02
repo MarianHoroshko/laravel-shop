@@ -1,8 +1,9 @@
-import { Head, Link } from '@inertiajs/react';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
-import { Button } from '@/components/ui/button';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { CheckCircle2Icon } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -11,20 +12,38 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function ProductsIndex () {
-
-    const handleAddBtn = () => {
+interface PageProps {
+    flash: {
+        message?: string;
     }
+}
+
+export default function ProductsIndex() {
+    const { flash } = usePage().props as unknown as PageProps;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Products" />
 
-            <div className="p-4">
-                <Link href={route("products.create")}><Button className="float-end">Add new product</Button></Link>
+            <div className="m-4">
+                <div className="grid grid-cols-[1fr_auto] items-start gap-4">
+                    {flash.message && (
+                        <Alert>
+                            <CheckCircle2Icon />
+                            <AlertTitle>Success! Your product have been added</AlertTitle>
+                            <AlertDescription>{flash.message}</AlertDescription>
+                        </Alert>
+                    )}
+
+                    <div className="justify-self-end">
+                        <Link href={route('products.create')}>
+                            <Button>Add new product</Button>
+                        </Link>
+                    </div>
+                </div>
 
 
             </div>
         </AppLayout>
-    )
+    );
 }
