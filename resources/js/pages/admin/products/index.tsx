@@ -1,10 +1,10 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { CheckCircle2Icon, Pencil, Trash } from 'lucide-react';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -12,6 +12,26 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/products',
     },
 ];
+
+interface IPages {
+    current_page: number;
+    data: IProduct[];
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: {
+        url: string | null;
+        label: string;
+        active: boolean;
+    }[];
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+    prev_page_url: string | null;
+    to: number;
+    total: number;
+}
 
 interface IProduct {
     id: string;
@@ -23,12 +43,12 @@ interface IProduct {
 interface PageProps {
     flash: {
         message?: string;
-    },
-    products: IProduct[]
+    };
+    pages: IPages;
 }
 
 export default function ProductsIndex() {
-    const { flash, products } = usePage().props as unknown as PageProps;
+    const { flash, pages } = usePage().props as unknown as PageProps;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -62,21 +82,34 @@ export default function ProductsIndex() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {products.length > 0 &&
-                            products.map((product) => (
+                        {pages.data.length > 0 &&
+                            pages.data.map((product: IProduct) => (
                                 <TableRow key={product.id}>
                                     <TableCell className="font-medium">{product.id}</TableCell>
                                     <TableCell>{product.name}</TableCell>
                                     <TableCell>{product.description}</TableCell>
                                     <TableCell className="text-right">${product.price}</TableCell>
-                                    <TableCell className="text-center space-x-3">
-                                        <Button><Pencil /></Button>
-                                        <Button className="bg-red-500 hover:bg-red-700"><Trash /></Button>
+                                    <TableCell className="space-x-3 text-center">
+                                        <Button>
+                                            <Pencil />
+                                        </Button>
+                                        <Button className="bg-red-500 hover:bg-red-700">
+                                            <Trash />
+                                        </Button>
                                     </TableCell>
                                 </TableRow>
                             ))}
                     </TableBody>
                 </Table>
+
+                <div className="float-end m-2 space-x-0.5">
+                    {pages.links.length > 0 &&
+                        pages.links.map((link, index) => (
+                            <Link key={index} href={link.url || '#'}>
+                                <Button disabled={link.active} dangerouslySetInnerHTML={{ __html: link.label }} />
+                            </Link>
+                        ))}
+                </div>
             </div>
         </AppLayout>
     );

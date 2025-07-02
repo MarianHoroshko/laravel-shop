@@ -11,9 +11,9 @@ class ProductsController extends Controller
 {
     public function index(): \Inertia\Response
     {
-        $products = Product::all();
+        $pages = Product::paginate(10);
 
-        return Inertia::render('admin/products/index', compact('products'));
+        return Inertia::render('admin/products/index', compact('pages'));
     }
 
     public function create(): \Inertia\Response
