@@ -5,6 +5,8 @@ import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircleIcon } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -22,14 +24,32 @@ export default function ProductsIndex() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(data);
-
         post(route('products.store'));
     }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create product" />
+
+            {Object.keys(errors).length > 0 && (
+                <div className="m-4 w-8/12">
+                    <Alert variant="destructive">
+                        <AlertCircleIcon />
+
+                        <AlertTitle>Unable to add new product.</AlertTitle>
+
+                        <AlertDescription>
+                            <p>Please verify your product information and try again.</p>
+
+                            <ul className="list-inside list-disc text-sm">
+                                {Object.entries(errors).map(([key, message]) => (
+                                    <li key={key}>{message as string}</li>
+                                ))}
+                            </ul>
+                        </AlertDescription>
+                    </Alert>
+                </div>
+            )}
 
             <div className="m-4 w-8/12">
                 <h2 className="font-bold">Create a new product</h2>
@@ -51,7 +71,7 @@ export default function ProductsIndex() {
                             <Textarea placeholder="Produnct name" value={data.description} onChange={(event) => setData('description', event.target.value)} />
                         </div>
 
-                        <Button type="submit" className="float-end">Add product</Button>
+                        <Button disabled={processing} type="submit" className="float-end">Add product</Button>
                     </div>
                 </form>
             </div>
