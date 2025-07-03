@@ -11,7 +11,7 @@ class ProductsController extends Controller
 {
     public function index(): \Inertia\Response
     {
-        $pages = Product::paginate(10);
+        $pages = Product::with('images')->paginate(10);
 
         return Inertia::render('admin/products/index', compact('pages'));
     }
@@ -30,13 +30,17 @@ class ProductsController extends Controller
             'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $paths = [];
+        $product = Product::create($request->only(['name', 'description', 'price']));
+        if ($request->has('images')) {
+            foreach ($request->images as $image) {
+                // If you're receiving file uploads (e.g., from an HTML form with <input type="file" multiple>)
+                $path = $image->store('product_images', 'public');
 
-        foreach ($request->file('images', []) as $image) {
-            $paths[] = '/storage/' . $image->store('uploads', 'public');
+                $product->images()->create([
+                    'image_path' => $path,
+                ]);
+            }
         }
-
-        Product::create($request->only(['name', 'description', 'price']));
 
         return redirect()->route('products.index')->with('message', 'Product created successfully.');
     }

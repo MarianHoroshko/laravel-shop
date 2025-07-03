@@ -50,6 +50,8 @@ interface PageProps {
 export default function ProductsIndex() {
     const { flash, pages } = usePage().props as unknown as PageProps;
 
+    console.log(pages);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Products" />

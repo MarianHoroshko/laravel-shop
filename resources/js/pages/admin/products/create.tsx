@@ -28,8 +28,6 @@ export default function ProductsIndex() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        console.log(data);
-
         post(route('products.store'), {
             forceFormData: true,
         });
