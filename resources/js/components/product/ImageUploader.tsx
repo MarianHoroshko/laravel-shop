@@ -1,30 +1,10 @@
+import SortableImage from '@/components/product/SortableImage';
 import { closestCenter, DndContext, DragEndEvent, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, horizontalListSortingStrategy, SortableContext, useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { arrayMove, horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable';
 import React, { useState } from 'react';
 
 interface ImageUploaderProps {
     onFilesSelect: (files: File[]) => void;
-}
-
-interface SortableImageProps {
-    src: string;
-    id: string;
-}
-
-function SortableImage({ src, id }: SortableImageProps) {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-    };
-
-    return (
-        <div ref={setNodeRef} {...attributes} {...listeners} style={style} className="h-48 w-48">
-            <img src={src} alt="Preview" className="h-full w-full rounded border object-scale-down" />
-        </div>
-    );
 }
 
 export default function ImageUploader({ onFilesSelect }: ImageUploaderProps) {
@@ -68,11 +48,22 @@ export default function ImageUploader({ onFilesSelect }: ImageUploaderProps) {
         }
     };
 
+    const removeImage = (index: string) => {
+        const indexPreview = previews.findIndex((item) => item === index);
+
+        const newPreview = previews.filter((_, index) => index !== indexPreview);
+        setPreviews(newPreview);
+
+        const newFiles = files.filter((_, index) => index !== indexPreview);
+        setFiles(newFiles);
+        onFilesSelect(newFiles);
+    };
+
     return (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={previews} strategy={horizontalListSortingStrategy}>
                 <div className="flex flex-row flex-wrap space-y-2 space-x-2">
-                    {previews.length > 0 && previews.map((src, index) => <SortableImage key={index} id={src} src={src} />)}
+                    {previews.length > 0 && previews.map((src, index) => <SortableImage removeImage={removeImage} key={index} id={src} src={src} />)}
 
                     {previews.length < 8 && (
                         <>
