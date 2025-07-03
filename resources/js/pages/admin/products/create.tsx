@@ -35,11 +35,8 @@ export default function ProductsIndex() {
         });
     };
 
-    const onFileSelect = (file: File) => {
-        const oldImages = data.images.values();
-        const newImages = [...oldImages, file];
-
-        setData('images', newImages);
+    const onFilesSelect = (files: File[]) => {
+        setData('images', files);
     };
 
     return (
@@ -83,7 +80,7 @@ export default function ProductsIndex() {
 
                         <div className="gap-3">
                             <Label htmlFor="product images">Add images</Label>
-                            <ImageUploader onFileSelect={onFileSelect} />
+                            <ImageUploader onFilesSelect={onFilesSelect} />
                         </div>
 
                         <div className="flex items-center gap-3">
