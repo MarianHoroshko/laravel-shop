@@ -1,12 +1,14 @@
+import ImageUploader from '@/components/product/ImageUploader';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircleIcon } from 'lucide-react';
+import React from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -16,16 +18,29 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ProductsIndex() {
-    const {data, setData, post, processing, errors} = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         name: '',
         price: '',
-        description: ''
+        description: '',
+        images: [] as File[],
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('products.store'));
-    }
+
+        console.log(data);
+
+        post(route('products.store'), {
+            forceFormData: true,
+        });
+    };
+
+    const onFileSelect = (file: File) => {
+        const oldImages = data.images.values();
+        const newImages = [...oldImages, file];
+
+        setData('images', newImages);
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -58,20 +73,41 @@ export default function ProductsIndex() {
                     <div className="m-4 space-y-4">
                         <div className="flex items-center gap-3">
                             <Label htmlFor="product name">Name</Label>
-                            <Input type="text" placeholder="Produnct name" value={data.name} onChange={(event) => setData('name', event.target.value)} />
+                            <Input
+                                type="text"
+                                placeholder="Produnct name"
+                                value={data.name}
+                                onChange={(event) => setData('name', event.target.value)}
+                            />
+                        </div>
+
+                        <div className="gap-3">
+                            <Label htmlFor="product images">Add images</Label>
+                            <ImageUploader onFileSelect={onFileSelect} />
                         </div>
 
                         <div className="flex items-center gap-3">
                             <Label htmlFor="product name">Price</Label>
-                            <Input type="number" placeholder="Produnct name" value={data.price} onChange={(event) => setData('price', event.target.value)} />
+                            <Input
+                                type="number"
+                                placeholder="Produnct name"
+                                value={data.price}
+                                onChange={(event) => setData('price', event.target.value)}
+                            />
                         </div>
 
                         <div className="flex items-center gap-3">
                             <Label htmlFor="product name">Description</Label>
-                            <Textarea placeholder="Produnct name" value={data.description} onChange={(event) => setData('description', event.target.value)} />
+                            <Textarea
+                                placeholder="Produnct name"
+                                value={data.description}
+                                onChange={(event) => setData('description', event.target.value)}
+                            />
                         </div>
 
-                        <Button disabled={processing} type="submit" className="float-end">Add product</Button>
+                        <Button disabled={processing} type="submit" className="float-end">
+                            Add product
+                        </Button>
                     </div>
                 </form>
             </div>
