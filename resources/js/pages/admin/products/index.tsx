@@ -1,9 +1,20 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { CheckCircle2Icon, Pencil, Trash } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -12,6 +23,11 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/products',
     },
 ];
+interface ILink {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
 
 interface IPages {
     current_page: number;
@@ -20,11 +36,7 @@ interface IPages {
     from: number;
     last_page: number;
     last_page_url: string;
-    links: {
-        url: string | null;
-        label: string;
-        active: boolean;
-    }[];
+    links: ILink[];
     next_page_url: string | null;
     path: string;
     per_page: number;
@@ -50,7 +62,11 @@ interface PageProps {
 export default function ProductsIndex() {
     const { flash, pages } = usePage().props as unknown as PageProps;
 
-    console.log(pages);
+    const {processing, delete: destroy} = useForm();
+
+    const handleDeleteProduct = (id: string) => {
+        destroy(route('products.destroy', id));
+    }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -61,7 +77,7 @@ export default function ProductsIndex() {
                     {flash.message && (
                         <Alert>
                             <CheckCircle2Icon />
-                            <AlertTitle>Success! Your product have been added</AlertTitle>
+                            <AlertTitle>Your action have been successful.</AlertTitle>
                             <AlertDescription>{flash.message}</AlertDescription>
                         </Alert>
                     )}
@@ -95,9 +111,25 @@ export default function ProductsIndex() {
                                         <Button>
                                             <Pencil />
                                         </Button>
-                                        <Button className="bg-red-500 hover:bg-red-700">
-                                            <Trash />
-                                        </Button>
+
+                                        <AlertDialog>
+                                            <AlertDialogTrigger className={buttonVariants({ variant: "destructive" })}>
+                                                <Trash />
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This action cannot be undone. This will permanently delete product {`${product.name} with id: ${product.id}`} and remove data
+                                                        from the server.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction disabled={processing} onClick={() => handleDeleteProduct(product.id)}>Continue</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
                                     </TableCell>
                                 </TableRow>
                             ))}
