@@ -21,6 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropColumns("products", "product_category_id");
     }
 };
