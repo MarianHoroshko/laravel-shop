@@ -3,10 +3,11 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { AlertCircleIcon } from 'lucide-react';
 import React from 'react';
 
@@ -17,9 +18,28 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+interface IProductCategory {
+    id: number;
+    name: string;
+    category_type_id: number;
+}
+
+interface IProductCategoryType {
+    id: number;
+    name: string;
+    categories: IProductCategory[];
+}
+
+interface CreateProps {
+    productCategories: IProductCategoryType[];
+}
+
 export default function ProductsIndex() {
+    const { productCategories } = usePage().props as unknown as CreateProps;
+
     const { data, setData, post, processing, errors } = useForm({
         name: '',
+        category_id: productCategories[0].categories[0].id.toString(),
         price: '',
         description: '',
         images: [] as File[],
@@ -32,6 +52,10 @@ export default function ProductsIndex() {
             forceFormData: true,
         });
     };
+
+    const handleCategorySelect = (categoryId: string) => {
+        setData('category_id', categoryId);
+    }
 
     const onFilesSelect = (files: File[]) => {
         setData('images', files);
@@ -74,6 +98,27 @@ export default function ProductsIndex() {
                                 value={data.name}
                                 onChange={(event) => setData('name', event.target.value)}
                             />
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <Label htmlFor="product category">Choose product category</Label>
+                            <Select onValueChange={handleCategorySelect}>
+                                <SelectTrigger className="w-[280px]">
+                                    <SelectValue placeholder="Select a procuct category" />
+                                </SelectTrigger>
+
+                                <SelectContent>
+                                    {productCategories.map((categoryType: IProductCategoryType) => (
+                                        <SelectGroup key={categoryType.id}>
+                                            <SelectLabel>{categoryType.name}</SelectLabel>
+
+                                            {categoryType.categories.map((category: IProductCategory) => (
+                                                <SelectItem value={category.id.toString()} key={category.id}>{category.name}</SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div className="gap-3">

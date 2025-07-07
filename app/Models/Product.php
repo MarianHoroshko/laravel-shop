@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $fillable = ["name", "description", "price"];
+    protected $fillable = ["name", "description", "price", "product_category_id"];
 
     public function images(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
