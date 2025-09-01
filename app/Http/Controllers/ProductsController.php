@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CategoryType;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\ProductImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -29,8 +30,6 @@ class ProductsController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-//        dd($request);
-
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1500',
@@ -58,6 +57,53 @@ class ProductsController extends Controller
         }
 
         return redirect()->route('products.index')->with('message', 'Product created successfully.');
+    }
+
+    public function edit(Product $product): Response
+    {
+        $productCategoryTypes = CategoryType::with('categories')->get()->all();
+        $product = Product::find($product->getKey())->with('images')->first();
+        $category = ProductCategory::find($product->product_category_id)->first();
+
+        return Inertia::render('admin/products/update', compact(['productCategoryTypes', 'product', 'category']));
+    }
+
+    public function update(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'id' => 'required|numeric|exists:products,id',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1500',
+            'price' => 'required|numeric|min:0.01|max:999999.99',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'category_id' => 'required|numeric|exists:product_categories,id',
+        ]);
+
+        $product = Product::find($request->get('id'))->first();
+
+        // delete old photos
+        ProductImage::where('product_id', '=', $product->value('id'))->delete();
+
+        $product->update([
+            "name" => $request->get('name'),
+            "description" => $request->get('description'),
+            "price" => $request->get('price'),
+            "product_category_id" => $request->get('category_id'),
+        ]);
+
+        // set new product photos
+        if ($request->has('images')) {
+            foreach ($request->images as $image) {
+                // If you're receiving file uploads (e.g., from an HTML form with <input type="file" multiple>)
+                $path = $image->store('product_images', 'public');
+
+                $product->images()->create([
+                    'image_path' => $path,
+                ]);
+            }
+        }
+
+        return redirect()->route('products.index')->with('message', 'Product updated successfully.');
     }
 
     public function destroy(Product $product): RedirectResponse

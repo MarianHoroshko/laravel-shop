@@ -62,11 +62,11 @@ interface PageProps {
 export default function ProductsIndex() {
     const { flash, pages } = usePage().props as unknown as PageProps;
 
-    const {processing, delete: destroy} = useForm();
+    const { processing, delete: destroy } = useForm();
 
     const handleDeleteProduct = (id: string) => {
         destroy(route('products.destroy', id));
-    }
+    };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -108,25 +108,29 @@ export default function ProductsIndex() {
                                     <TableCell>{product.description}</TableCell>
                                     <TableCell className="text-right">${product.price}</TableCell>
                                     <TableCell className="space-x-3 text-center">
-                                        <Button>
-                                            <Pencil />
-                                        </Button>
+                                        <Link href={route('products.edit', product.id)}>
+                                            <Button>
+                                                <Pencil />
+                                            </Button>
+                                        </Link>
 
                                         <AlertDialog>
-                                            <AlertDialogTrigger className={buttonVariants({ variant: "destructive" })}>
+                                            <AlertDialogTrigger className={buttonVariants({ variant: 'destructive' })}>
                                                 <Trash />
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
                                                 <AlertDialogHeader>
                                                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                                                     <AlertDialogDescription>
-                                                        This action cannot be undone. This will permanently delete product {`${product.name} with id: ${product.id}`} and remove data
-                                                        from the server.
+                                                        This action cannot be undone. This will permanently delete product{' '}
+                                                        {`${product.name} with id: ${product.id}`} and remove data from the server.
                                                     </AlertDialogDescription>
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction disabled={processing} onClick={() => handleDeleteProduct(product.id)}>Continue</AlertDialogAction>
+                                                    <AlertDialogAction disabled={processing} onClick={() => handleDeleteProduct(product.id)}>
+                                                        Continue
+                                                    </AlertDialogAction>
                                                 </AlertDialogFooter>
                                             </AlertDialogContent>
                                         </AlertDialog>

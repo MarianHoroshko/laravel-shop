@@ -7,45 +7,60 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
+import IProductCategory from '@/types/products/IProductCategory';
+import IProductCategoryType from '@/types/products/IProductCategoryType';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { AlertCircleIcon } from 'lucide-react';
 import React from 'react';
-import IProductCategoryType from '@/types/products/IProductCategoryType';
-import IProductCategory from '@/types/products/IProductCategory';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Create product',
-        href: '/products/create',
+        title: 'Update product',
+        href: '/products/update/{id}',
     },
 ];
 
-interface CreateProps {
-    productCategories: IProductCategoryType[];
+interface IProduct {
+    id: number;
+    name: string;
+    product_category_id: string;
+    price: string;
+    description: string;
+    images: File[];
+}
+
+interface UpdateProps {
+    productCategoryTypes: IProductCategoryType[];
+    product: IProduct;
+    category: IProductCategory;
 }
 
 export default function ProductsIndex() {
-    const { productCategories } = usePage().props as unknown as CreateProps;
+    const { productCategoryTypes, product, category } = usePage().props as unknown as UpdateProps;
 
     const { data, setData, post, processing, errors } = useForm({
-        name: '',
-        category_id: productCategories[0].categories[0].id.toString(),
-        price: '',
-        description: '',
-        images: [] as File[],
+        _method: 'PUT',
+        id: product.id,
+        name: product.name,
+        category_id: product.product_category_id,
+        price: product.price,
+        description: product.description,
+        images: product.images as File[],
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        post(route('products.store'), {
+        console.log(data);
+
+        post(route('products.update', product.id), {
             forceFormData: true,
         });
     };
 
     const handleCategorySelect = (categoryId: string) => {
         setData('category_id', categoryId);
-    }
+    };
 
     const onFilesSelect = (files: File[]) => {
         setData('images', files);
@@ -92,18 +107,20 @@ export default function ProductsIndex() {
 
                         <div className="flex items-center gap-3">
                             <Label htmlFor="product category">Choose product category</Label>
-                            <Select onValueChange={handleCategorySelect}>
+                            <Select defaultValue={category.id.toString()} onValueChange={handleCategorySelect}>
                                 <SelectTrigger className="w-[280px]">
                                     <SelectValue placeholder="Select a procuct category" />
                                 </SelectTrigger>
 
                                 <SelectContent>
-                                    {productCategories.map((categoryType: IProductCategoryType) => (
+                                    {productCategoryTypes.map((categoryType: IProductCategoryType) => (
                                         <SelectGroup key={categoryType.id}>
                                             <SelectLabel>{categoryType.name}</SelectLabel>
 
                                             {categoryType.categories.map((category: IProductCategory) => (
-                                                <SelectItem value={category.id.toString()} key={category.id}>{category.name}</SelectItem>
+                                                <SelectItem value={category.id.toString()} key={category.id}>
+                                                    {category.name}
+                                                </SelectItem>
                                             ))}
                                         </SelectGroup>
                                     ))}
@@ -113,7 +130,7 @@ export default function ProductsIndex() {
 
                         <div className="gap-3">
                             <Label htmlFor="product images">Add images</Label>
-                            <ImageUploader onFilesSelect={onFilesSelect} />
+                            <ImageUploader filesProps={product.images} onFilesSelect={onFilesSelect} />
                         </div>
 
                         <div className="flex items-center gap-3">
@@ -136,7 +153,7 @@ export default function ProductsIndex() {
                         </div>
 
                         <Button disabled={processing} type="submit" className="float-end">
-                            Add product
+                            Update product
                         </Button>
                     </div>
                 </form>

@@ -1,15 +1,50 @@
 import SortableImage from '@/components/product/SortableImage';
 import { closestCenter, DndContext, DragEndEvent, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface ImageUploaderProps {
+    filesProps?: {
+        image_path: string;
+    }[];
     onFilesSelect: (files: File[]) => void;
 }
 
-export default function ImageUploader({ onFilesSelect }: ImageUploaderProps) {
+export default function ImageUploader({ filesProps, onFilesSelect }: ImageUploaderProps) {
     const [previews, setPreviews] = useState<string[]>([]);
     const [files, setFiles] = useState<File[]>([]);
+
+    useEffect(() => {
+        if (filesProps !== undefined) {
+            const newPreviews = [] as string[];
+            const newFiles = [] as File[];
+
+            filesProps.map(async (fileData) => {
+                if (fileData !== undefined) {
+                    const file = await getFileFromUrl('http://localhost:8000/storage/' + fileData.image_path, fileData.image_path);
+                    console.log(file);
+                    console.log(URL.createObjectURL(file));
+
+                    newFiles.push(file);
+
+                    newPreviews.push(URL.createObjectURL(file));
+
+                    setFiles(newFiles);
+                    setPreviews(newPreviews);
+
+                    onFilesSelect(newFiles); // Send files to parent (form)
+                }
+            });
+        }
+    }, [filesProps]);
+
+    const getFileFromUrl = async (url: string, name: string, defaultType = 'image/jpeg') => {
+        const response = await fetch(url);
+        const data = await response.blob();
+        return new File([data], name, {
+            type: data.type || defaultType,
+        });
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
