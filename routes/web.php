@@ -9,18 +9,22 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::prefix("admin")->group(function () {
+        Route::get('dashboard', function () {
+            return Inertia::render('dashboard');
+        })->name('dashboard');
 
-    Route::get('products', [ProductsController::class, 'index'])->name('products.index');
+        Route::prefix("dashboard")->group(function () {
+            Route::get('products', [ProductsController::class, 'index'])->name('admin.products.index');
 
-    Route::get('products/create', [ProductsController::class, 'create'])->name('products.create');
-    Route::post('products/store', [ProductsController::class, 'store'])->name('products.store');
-    Route::get('products/edit/{product}', [ProductsController::class, 'edit'])->name('products.edit');
-    Route::put('products/update/{product}', [ProductsController::class, 'update'])->name('products.update');
-    Route::delete('products/delete/{product}', [ProductsController::class, 'destroy'])->name('products.destroy');
+            Route::get('products/create', [ProductsController::class, 'create'])->name('admin.products.create');
+            Route::post('products/store', [ProductsController::class, 'store'])->name('admin.products.store');
+            Route::get('products/edit/{product}', [ProductsController::class, 'edit'])->name('admin.products.edit');
+            Route::put('products/update/{product}', [ProductsController::class, 'update'])->name('admin.products.update');
+            Route::delete('products/delete/{product}', [ProductsController::class, 'destroy'])->name('admin.products.destroy');
+        });
+    });
 });
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';

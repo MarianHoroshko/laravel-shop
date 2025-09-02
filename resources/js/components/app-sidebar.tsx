@@ -10,14 +10,14 @@ import AppLogo from './app-logo';
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: '/dashboard',
+        href: route('dashboard'),
         icon: LayoutGrid,
     },
     {
         title: 'Products',
-        href: '/products',
-        icon: Package
-    }
+        href: route('admin.products.index'),
+        icon: Package,
+    },
 ];
 
 const footerNavItems: NavItem[] = [

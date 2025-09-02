@@ -20,7 +20,7 @@ import { CheckCircle2Icon, Pencil, Trash } from 'lucide-react';
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Products',
-        href: '/products',
+        href: route('admin.products.index'),
     },
 ];
 interface ILink {
@@ -65,7 +65,7 @@ export default function ProductsIndex() {
     const { processing, delete: destroy } = useForm();
 
     const handleDeleteProduct = (id: string) => {
-        destroy(route('products.destroy', id));
+        destroy(route('admin.products.destroy', id));
     };
 
     return (
@@ -83,7 +83,7 @@ export default function ProductsIndex() {
                     )}
 
                     <div className="justify-self-end">
-                        <Link href={route('products.create')}>
+                        <Link href={route('admin.products.create')}>
                             <Button>Add new product</Button>
                         </Link>
                     </div>
@@ -108,7 +108,7 @@ export default function ProductsIndex() {
                                     <TableCell>{product.description}</TableCell>
                                     <TableCell className="text-right">${product.price}</TableCell>
                                     <TableCell className="space-x-3 text-center">
-                                        <Link href={route('products.edit', product.id)}>
+                                        <Link href={route('admin.products.edit', { product: product.id })}>
                                             <Button>
                                                 <Pencil />
                                             </Button>
