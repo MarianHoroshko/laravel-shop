@@ -22,11 +22,8 @@ export default function ImageUploader({ filesProps, onFilesSelect }: ImageUpload
             filesProps.map(async (fileData) => {
                 if (fileData !== undefined) {
                     const file = await getFileFromUrl('http://localhost:8000/storage/' + fileData.image_path, fileData.image_path);
-                    console.log(file);
-                    console.log(URL.createObjectURL(file));
 
                     newFiles.push(file);
-
                     newPreviews.push(URL.createObjectURL(file));
 
                     setFiles(newFiles);
