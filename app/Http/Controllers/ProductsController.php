@@ -56,16 +56,15 @@ class ProductsController extends Controller
             }
         }
 
-        return redirect()->route('products.index')->with('message', 'Product created successfully.');
+        return redirect()->route('admin.products.index')->with('message', 'Product created successfully.');
     }
 
     public function edit(Product $product): Response
     {
+        $product->load('images');
         $productCategoryTypes = CategoryType::with('categories')->get()->all();
-        $product = Product::find($product->getKey())->with('images')->first();
-        $category = ProductCategory::find($product->product_category_id)->first();
 
-        return Inertia::render('admin/products/update', compact(['productCategoryTypes', 'product', 'category']));
+        return Inertia::render('admin/products/update', compact(['productCategoryTypes', 'product']));
     }
 
     public function update(Request $request): RedirectResponse
@@ -103,7 +102,7 @@ class ProductsController extends Controller
             }
         }
 
-        return redirect()->route('products.index')->with('message', 'Product updated successfully.');
+        return redirect()->route('admin.products.index')->with('message', 'Product updated successfully.');
     }
 
     public function destroy(Product $product): RedirectResponse
@@ -114,6 +113,6 @@ class ProductsController extends Controller
         }
 
         $product->delete();
-        return redirect()->route('products.index')->with('message', 'Product deleted successfully.');
+        return redirect()->route('admin.products.index')->with('message', 'Product deleted successfully.');
     }
 }

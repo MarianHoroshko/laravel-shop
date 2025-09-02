@@ -108,7 +108,7 @@ export default function ProductsIndex() {
                                     <TableCell>{product.description}</TableCell>
                                     <TableCell className="text-right">${product.price}</TableCell>
                                     <TableCell className="space-x-3 text-center">
-                                        <Link href={route('admin.products.edit', { product: product.id })}>
+                                        <Link href={route('admin.products.edit', { product: product.id.toString() })}>
                                             <Button>
                                                 <Pencil />
                                             </Button>

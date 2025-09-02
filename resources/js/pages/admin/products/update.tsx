@@ -32,11 +32,10 @@ interface IProduct {
 interface UpdateProps {
     productCategoryTypes: IProductCategoryType[];
     product: IProduct;
-    category: IProductCategory;
 }
 
 export default function ProductsIndex() {
-    const { productCategoryTypes, product, category } = usePage().props as unknown as UpdateProps;
+    const { productCategoryTypes, product } = usePage().props as unknown as UpdateProps;
 
     const { data, setData, post, processing, errors } = useForm({
         _method: 'PUT',
@@ -53,7 +52,7 @@ export default function ProductsIndex() {
 
         console.log(data);
 
-        post(route('products.update', product.id), {
+        post(route('admin.products.update', product.id), {
             forceFormData: true,
         });
     };
@@ -107,7 +106,7 @@ export default function ProductsIndex() {
 
                         <div className="flex items-center gap-3">
                             <Label htmlFor="product category">Choose product category</Label>
-                            <Select defaultValue={category.id.toString()} onValueChange={handleCategorySelect}>
+                            <Select defaultValue={product.product_category_id.toString()} onValueChange={handleCategorySelect}>
                                 <SelectTrigger className="w-[280px]">
                                     <SelectValue placeholder="Select a procuct category" />
                                 </SelectTrigger>
