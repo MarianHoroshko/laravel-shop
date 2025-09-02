@@ -7,11 +7,11 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
+import IProductCategory from '@/types/products/IProductCategory';
+import IProductCategoryType from '@/types/products/IProductCategoryType';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { AlertCircleIcon } from 'lucide-react';
 import React from 'react';
-import IProductCategoryType from '@/types/products/IProductCategoryType';
-import IProductCategory from '@/types/products/IProductCategory';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -38,14 +38,14 @@ export default function ProductsIndex() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        post(route('products.store'), {
+        post(route('admin.products.store'), {
             forceFormData: true,
         });
     };
 
     const handleCategorySelect = (categoryId: string) => {
         setData('category_id', categoryId);
-    }
+    };
 
     const onFilesSelect = (files: File[]) => {
         setData('images', files);
@@ -103,7 +103,9 @@ export default function ProductsIndex() {
                                             <SelectLabel>{categoryType.name}</SelectLabel>
 
                                             {categoryType.categories.map((category: IProductCategory) => (
-                                                <SelectItem value={category.id.toString()} key={category.id}>{category.name}</SelectItem>
+                                                <SelectItem value={category.id.toString()} key={category.id}>
+                                                    {category.name}
+                                                </SelectItem>
                                             ))}
                                         </SelectGroup>
                                     ))}
