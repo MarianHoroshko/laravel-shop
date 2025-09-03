@@ -31,7 +31,7 @@ export default function HomePage() {
                     {/* logo */}
                     <div>
                         <Link href="/" className="m-1">
-                            <img src="/logo.png" className="w-30" />
+                            <img src="/logo.png" className="h-30 w-45" />
                         </Link>
                     </div>
 
