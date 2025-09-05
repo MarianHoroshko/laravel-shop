@@ -10,8 +10,6 @@ class HomeController extends Controller
 {
     public function show()
     {
-        $productCategories = CategoryType::with('categories')->get()->all();
-
-        return Inertia::render('HomePage', compact('productCategories'));
+        return Inertia::render('HomePage');
     }
 }

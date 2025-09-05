@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\CategoryType;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Inertia::share([
+            'productCategories' => function () {
+                return CategoryType::with('categories')->get()->all();
+            },
+        ]);
     }
 }
