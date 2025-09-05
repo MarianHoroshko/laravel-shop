@@ -10,6 +10,6 @@ class HomeController extends Controller
 {
     public function show()
     {
-        return Inertia::render('HomePage');
+        return Inertia::render('client/HomePage');
     }
 }
