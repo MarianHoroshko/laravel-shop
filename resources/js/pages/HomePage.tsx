@@ -1,24 +1,11 @@
 import CommandSearch from '@/components/client/CommandSearch';
-import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu';
+import NavMenu from '@/components/client/NavMenu';
+import { IProductCategories } from '@/types/client/IProductCategories';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { ShoppingCart, User } from 'lucide-react';
 
 interface HomePageProps {
-    productCategories: {
-        categories: {
-            id: number;
-            name: string;
-        }[];
-        id: number;
-        name: string;
-    }[];
+    productCategories: IProductCategories[];
 }
 
 export default function HomePage() {
@@ -58,29 +45,7 @@ export default function HomePage() {
                     </div>
                     {/* nav with dropdowns */}
                     <div className="flex justify-center">
-                        <NavigationMenu viewport={false}>
-                            <NavigationMenuList>
-                                {productCategories.length > 0 &&
-                                    productCategories.map((productCategory) => (
-                                        <NavigationMenuItem key={productCategory.name}>
-                                            <NavigationMenuTrigger>{productCategory.name}</NavigationMenuTrigger>
-
-                                            <NavigationMenuContent>
-                                                <ul className="grid w-[250px] gap-2 md:w-[350px] md:grid-cols-2 lg:w-[450px]">
-                                                    {productCategory.categories.length > 0 &&
-                                                        productCategory.categories.map((category) => (
-                                                            <li>
-                                                                <NavigationMenuLink asChild key={category.name}>
-                                                                    <Link href="#">{category.name}</Link>
-                                                                </NavigationMenuLink>
-                                                            </li>
-                                                        ))}
-                                                </ul>
-                                            </NavigationMenuContent>
-                                        </NavigationMenuItem>
-                                    ))}
-                            </NavigationMenuList>
-                        </NavigationMenu>
+                        <NavMenu productCategories={productCategories} />
                     </div>
                 </div>
 
