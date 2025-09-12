@@ -8,9 +8,10 @@ interface ImageUploaderProps {
         image_path: string;
     }[];
     onFilesSelect: (files: File[]) => void;
+    maxImagesCount?: number;
 }
 
-export default function ImageUploader({ filesProps, onFilesSelect }: ImageUploaderProps) {
+export default function ImageUploader({ filesProps, onFilesSelect, maxImagesCount = 8 }: ImageUploaderProps) {
     const [previews, setPreviews] = useState<string[]>([]);
     const [files, setFiles] = useState<File[]>([]);
 
@@ -97,12 +98,12 @@ export default function ImageUploader({ filesProps, onFilesSelect }: ImageUpload
                 <div className="flex flex-row flex-wrap space-y-2 space-x-2">
                     {previews.length > 0 && previews.map((src, index) => <SortableImage removeImage={removeImage} key={index} id={src} src={src} />)}
 
-                    {previews.length < 8 && (
+                    {previews.length < maxImagesCount && (
                         <>
                             <input type="file" id="fileUpload" className="hidden" onChange={handleFileChange} />
                             <label
                                 htmlFor="fileUpload"
-                                className="flex h-48 w-48 cursor-pointer items-center justify-center rounded bg-black font-semibold text-white select-none hover:bg-gray-700"
+                                className="flex h-48 w-48 cursor-pointer items-center justify-center rounded bg-primary font-semibold text-primary-foreground select-none hover:bg-gray-700"
                             >
                                 Add image
                             </label>
