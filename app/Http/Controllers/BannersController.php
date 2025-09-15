@@ -61,7 +61,7 @@ class BannersController extends Controller
 
     public function destroy(Banner $banner)
     {
-        Banner::delete();
+        Banner::truncate();
 
         return redirect()->route('admin.banners.index')->with('message', 'Banner deleted successfully.');
     }

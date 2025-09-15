@@ -15,17 +15,19 @@ export default function HomePage() {
             <Head title="W Gorniatku" />
             <div className="bg-white">
                 {/* banner */}
-                <div className="flex flex-row justify-center">
-                    <div className="h-50 w-200">
-                        <Link href={banner.href}>
-                            <img
-                                src={`http://localhost:8000/storage/${banner?.image_path}`}
-                                alt="banner"
-                                className="h-full w-full object-scale-down"
-                            />
-                        </Link>
+                {banner !== null && (
+                    <div className="flex flex-row justify-center">
+                        <div className="h-50 w-200">
+                            <Link href={banner.href}>
+                                <img
+                                    src={`http://localhost:8000/storage/${banner?.image_path}`}
+                                    alt="banner"
+                                    className="h-full w-full object-scale-down"
+                                />
+                            </Link>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </>
     );

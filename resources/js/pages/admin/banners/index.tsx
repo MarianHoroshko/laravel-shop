@@ -1,9 +1,21 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Button, buttonVariants } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
+import { cn } from '@/lib/utils';
 import type { BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
-import { CheckCircle2Icon } from 'lucide-react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { CheckCircle2Icon, Trash } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -25,6 +37,12 @@ interface PageProps {
 export default function BannersIndex() {
     const { flash, banner } = usePage().props as unknown as PageProps;
 
+    const { processing, delete: destroy } = useForm();
+
+    const handleDelete = () => {
+        destroy(route('admin.banners.destroy', banner));
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Banners" />
@@ -39,11 +57,33 @@ export default function BannersIndex() {
                 )}
 
                 {/* header */}
-                <div className="my-1 h-25 w-150 rounded-2xl border-2">
+                <div className="relative my-1 h-25 w-150 rounded-2xl border-2">
                     {banner !== null ? (
-                        <Link href={route('admin.banners.edit', banner)}>
-                            <img src={`http://localhost:8000/storage/${banner?.image_path}`} className="h-full w-full object-scale-down" />
-                        </Link>
+                        <>
+                            <Link href={route('admin.banners.edit', banner)}>
+                                <img src={`http://localhost:8000/storage/${banner?.image_path}`} className="h-full w-full object-scale-down" />
+                            </Link>
+
+                            <AlertDialog>
+                                <AlertDialogTrigger className={cn(buttonVariants({ variant: 'destructive' }), 'absolute', 'top-0', 'right-0')}>
+                                    <Trash />
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This action cannot be undone. This will permanently delete banner and remove data from the server.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction disabled={processing} onClick={handleDelete}>
+                                            Continue
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </>
                     ) : (
                         <Link href={route('admin.banners.create')}>
                             <Button className="h-full w-full">Add banner</Button>

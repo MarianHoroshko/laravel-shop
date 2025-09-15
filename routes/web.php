@@ -27,7 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('banners/store', [BannersController::class, 'store'])->name('admin.banners.store');
             Route::get('banners/edit/{banner}', [BannersController::class, 'edit'])->name('admin.banners.edit');
             Route::put('banners/update/{banner}', [BannersController::class, 'update'])->name('admin.banners.update');
-            Route::delete('banners/delete/{banner}', [BannersController::class, 'delete'])->name('admin.banners.delete');
+            Route::delete('banners/delete/{banner}', [BannersController::class, 'destroy'])->name('admin.banners.destroy');
         });
     });
 });
