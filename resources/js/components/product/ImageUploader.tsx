@@ -34,7 +34,7 @@ export default function ImageUploader({ filesProps, onFilesSelect, maxImagesCoun
                 }
             });
         }
-    }, [filesProps]);
+    }, []);
 
     const getFileFromUrl = async (url: string, name: string, defaultType = 'image/jpeg') => {
         const response = await fetch(url);

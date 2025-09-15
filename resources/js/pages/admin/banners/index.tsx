@@ -41,7 +41,9 @@ export default function BannersIndex() {
                 {/* header */}
                 <div className="my-1 h-25 w-150 rounded-2xl border-2">
                     {banner !== null ? (
-                        <img src={`http://localhost:8000/storage/${banner?.image_path}`} className="h-full w-full object-scale-down" />
+                        <Link href={route('admin.banners.edit', banner)}>
+                            <img src={`http://localhost:8000/storage/${banner?.image_path}`} className="h-full w-full object-scale-down" />
+                        </Link>
                     ) : (
                         <Link href={route('admin.banners.create')}>
                             <Button className="h-full w-full">Add banner</Button>

@@ -36,4 +36,33 @@ class BannersController extends Controller
 
         return redirect()->route('admin.banners.index')->with('message', 'Banner added successfully.');
     }
+
+    public function edit(Banner $banner)
+    {
+        return Inertia::render('admin/banners/update', compact('banner'));
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'href' => 'required|string|max:50',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $image_path = $request->file('image')->store('banners', 'public');
+
+        $banner = Banner::create([
+            'href' => $request->get('href'),
+            'image_path' => $image_path
+        ]);
+
+        return redirect()->route('admin.banners.index')->with('message', 'Banner updated successfully.');
+    }
+
+    public function destroy(Banner $banner)
+    {
+        Banner::delete();
+
+        return redirect()->route('admin.banners.index')->with('message', 'Banner deleted successfully.');
+    }
 }
