@@ -11,7 +11,6 @@ class BannersController extends Controller
     public function index()
     {
         $banner = Banner::latest('id')->first();
-        // dd($banner);
 
         return Inertia::render('admin/banners/index', compact('banner'));
     }
