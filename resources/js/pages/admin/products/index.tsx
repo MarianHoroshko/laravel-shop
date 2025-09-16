@@ -14,6 +14,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
+import IProduct from '@/types/products/IProduct';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { CheckCircle2Icon, Pencil, Trash } from 'lucide-react';
 
@@ -43,13 +44,6 @@ interface IPages {
     prev_page_url: string | null;
     to: number;
     total: number;
-}
-
-interface IProduct {
-    id: string;
-    name: string;
-    description: string;
-    price: string;
 }
 
 interface PageProps {
