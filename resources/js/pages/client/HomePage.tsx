@@ -1,9 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import ProductsCarousel from '@/components/client/ProductsCarousel';
 import IProduct from '@/types/products/IProduct';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { Star } from 'lucide-react';
 
 interface HomePageProps {
     banner: {
@@ -35,52 +32,7 @@ export default function HomePage() {
                     </div>
                 )}
 
-                <div className="p-16">
-                    <h2 className="p-1 text-5xl text-primary">Top sales</h2>
-
-                    <Carousel
-                        opts={{
-                            align: 'start',
-                        }}
-                        className="max-w-8xl w-full"
-                    >
-                        <CarouselContent>
-                            {products.map((product, index) => (
-                                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/6">
-                                    <div className="p-1">
-                                        <Link href={`/product/${product.id}`}>
-                                            <Card>
-                                                <CardContent className="flex aspect-square flex-col p-6">
-                                                    <img src={`http://localhost:8000/storage/${product.images[0].image_path}`} alt={product.name} />
-
-                                                    <div className="m-1 flex justify-between">
-                                                        <div className="m-1">
-                                                            <h3 className="text-xl font-semibold">{product.price} zł</h3>
-                                                            <h5 className="text-md font-semibold">{product.name}</h5>
-                                                        </div>
-
-                                                        <div className="m-1 flex">
-                                                            <Star color="yellow" fill="yellow" />
-
-                                                            <h3 className="text-xl font-semibold">5.0</h3>
-                                                        </div>
-                                                    </div>
-                                                </CardContent>
-
-                                                <CardFooter className="flex">
-                                                    <Button className="justify-end">Add to card</Button>
-                                                </CardFooter>
-                                            </Card>
-                                        </Link>
-                                    </div>
-                                </CarouselItem>
-                            ))}
-                        </CarouselContent>
-
-                        <CarouselPrevious />
-                        <CarouselNext />
-                    </Carousel>
-                </div>
+                <ProductsCarousel products={products} />
             </div>
         </>
     );
