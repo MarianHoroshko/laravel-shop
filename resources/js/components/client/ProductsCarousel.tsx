@@ -9,7 +9,7 @@ interface CarouselProps {
 export default function ProductsCarousel({ products }: CarouselProps) {
     return (
         <div className="px-16 py-8">
-            <h2 className="p-2 text-5xl text-primary">Top sales</h2>
+            <h2 className="p-8 text-5xl text-primary">Top sales</h2>
 
             <Carousel
                 opts={{

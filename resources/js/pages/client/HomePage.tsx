@@ -19,17 +19,9 @@ export default function HomePage() {
             <div className="bg-white">
                 {/* banner */}
                 {banner !== null && (
-                    <div className="flex flex-row justify-center">
-                        <div className="m-3 h-50 w-200">
-                            <Link href={banner.href}>
-                                <img
-                                    src={`http://localhost:8000/storage/${banner?.image_path}`}
-                                    alt="banner"
-                                    className="h-full w-full object-scale-down"
-                                />
-                            </Link>
-                        </div>
-                    </div>
+                    <Link href={banner.href}>
+                        <img src={`http://localhost:8000/storage/${banner?.image_path}`} alt="banner" className="h-150 w-full" />
+                    </Link>
                 )}
 
                 <ProductsCarousel products={products} />
