@@ -19,9 +19,15 @@ export default function HomePage() {
             <div className="bg-white">
                 {/* banner */}
                 {banner !== null && (
-                    <Link href={banner.href}>
-                        <img src={`http://localhost:8000/storage/${banner?.image_path}`} alt="banner" className="h-150 w-full" />
-                    </Link>
+                    <div className="bg-[#673918]">
+                        <Link href={banner.href}>
+                            <img
+                                src={`http://localhost:8000/storage/${banner?.image_path}`}
+                                alt="banner"
+                                className="h-150 w-full object-scale-down"
+                            />
+                        </Link>
+                    </div>
                 )}
 
                 <ProductsCarousel products={products} />
