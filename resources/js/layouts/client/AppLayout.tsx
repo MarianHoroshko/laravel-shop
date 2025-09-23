@@ -48,7 +48,7 @@ export function AppLayout({ children }: React.PropsWithChildren) {
             </div>
 
             {/* main */}
-            <div>{children}</div>
+            <div className="bg-white">{children}</div>
 
             {/* Footer */}
             <div className="flex justify-center">
