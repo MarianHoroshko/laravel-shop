@@ -12,7 +12,7 @@ export default function ProductCard({ product }: CardProps) {
     return (
         <Card className="h-125 w-75">
             <CardContent className="flex aspect-square h-full w-full flex-col">
-                <Link href={`/product/${product.id}`}>
+                <Link href={`/products/${product.id}`}>
                     <img
                         className="h-50 w-full object-cover"
                         src={`http://localhost:8000/storage/${product.images[0].image_path}`}

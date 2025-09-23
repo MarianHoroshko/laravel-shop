@@ -1,12 +1,24 @@
 <?php
 
 use App\Http\Controllers\BannersController;
+use App\Http\Controllers\Client\ProductsController as ClientProductsController;
+use App\Http\Controllers\Admin\ProductsController as AdminProductsController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProductsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+/**
+ * Client routes
+ */
+
 Route::get('/', [HomeController::class, 'show'])->name('home');
+
+Route::get('products/{product}', [ClientProductsController::class, 'product'])->name('product');
+
+
+/**
+ * Admin routes
+ */
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix("admin")->group(function () {
@@ -15,12 +27,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         })->name('dashboard');
 
         Route::prefix("dashboard")->group(function () {
-            Route::get('products', [ProductsController::class, 'index'])->name('admin.products.index');
-            Route::get('products/create', [ProductsController::class, 'create'])->name('admin.products.create');
-            Route::post('products/store', [ProductsController::class, 'store'])->name('admin.products.store');
-            Route::get('products/edit/{product}', [ProductsController::class, 'edit'])->name('admin.products.edit');
-            Route::put('products/update/{product}', [ProductsController::class, 'update'])->name('admin.products.update');
-            Route::delete('products/delete/{product}', [ProductsController::class, 'destroy'])->name('admin.products.destroy');
+            Route::get('products', [AdminProductsController::class, 'index'])->name('admin.products.index');
+            Route::get('products/create', [AdminProductsController::class, 'create'])->name('admin.products.create');
+            Route::post('products/store', [AdminProductsController::class, 'store'])->name('admin.products.store');
+            Route::get('products/edit/{product}', [AdminProductsController::class, 'edit'])->name('admin.products.edit');
+            Route::put('products/update/{product}', [AdminProductsController::class, 'update'])->name('admin.products.update');
+            Route::delete('products/delete/{product}', [AdminProductsController::class, 'destroy'])->name('admin.products.destroy');
 
             Route::get('banners', [BannersController::class, 'index'])->name('admin.banners.index');
             Route::get('banners/create', [BannersController::class, 'create'])->name('admin.banners.create');

@@ -16,7 +16,7 @@ export default function HomePage() {
     return (
         <>
             <Head title="W Gorniatku" />
-            <div className="bg-white">
+            <div>
                 {/* banner */}
                 {banner !== null && (
                     <div className="bg-[#673918]">
